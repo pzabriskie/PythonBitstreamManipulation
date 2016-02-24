@@ -20,3 +20,8 @@ Planned features:
 		Compare frame
 		Mask frames
 		Extract bits and frames
+
+Class Structure:
+	Parser classes will return a fradStructure object after parsing the file given to it.
+	fradStructure contains methods for accessing frame data as well as FAR incrementing logic.
+	frameOperations performs useful operations to compare data from two fradStructure objects.
