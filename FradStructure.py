@@ -158,11 +158,87 @@ class FradStructure:
 	
 		return self.get_current_frad()
 
+	def step_backward(self):
+		# decrement minor. If end of column is reached, set minor to size of column - 1
+		if(self.minor > 0):
+			self.minor -= 1
+			return self.get_current_frad()
+		
+		
+		# decrement column if minor reaches end of column. If end of row is reached, set column to size of row - 1
+		if(self.column > 0):
+			self.column -= 1
+			self.minor = len(self.fradStructure[self.type][self.topBottom][self.row][self.column]) - 1
+			return self.get_current_frad()
+		
+		
+		# increment row if last column is reached. Set row to 0 if switching from top to bottom is necessary
+		if(self.row > 0):
+			self.row -= 1
+			self.column = len(self.fradStructure[self.type][self.topBottom][self.row]) - 1
+			self.minor = len(self.fradStructure[self.type][self.topBottom][self.row][self.column]) - 1	
+			return self.get_current_frad()
+		
+		
+		# change topBottom if last row on half is reached. Not applicable for ultrascale
+		if(self.series != 8):
+			if(self.topBottom == 1):
+				self.topBottom = 0
+				self.row = len(self.fradStructure[self.type][self.topBottom]) - 1
+				self.column = len(self.fradStructure[self.type][self.topBottom][self.row]) - 1
+				self.minor = len(self.fradStructure[self.type][self.topBottom][self.row][self.column]) - 1
+				return self.get_current_frad()
+			
+			else:
+				self.topBottom = len(self.fradStructure[self.type])-1
+			
+		
+		
+		# change type if end of type is reached. Return to type 0 if end of configuration is reached
+		if(self.type > 0):
+			self.type -= 1
+			self.topBottom = len(self.fradStructure[self.type])-1
+			self.row = len(self.fradStructure[self.type][self.topBottom]) - 1
+			self.column = len(self.fradStructure[self.type][self.topBottom][self.row]) - 1
+			self.minor = len(self.fradStructure[self.type][self.topBottom][self.row][self.column]) - 1
+			return self.get_current_frad()
+		
+		self.type = len(self.fradStructure) - 1
+		self.topBottom = len(self.fradStructure[self.type])-1
+		self.row = len(self.fradStructure[self.type][self.topBottom]) - 1
+		self.column = len(self.fradStructure[self.type][self.topBottom][self.row]) - 1
+		self.minor = len(self.fradStructure[self.type][self.topBottom][self.row][self.column]) - 1
+		return self.get_current_frad()
 
+	def set_current_location(self, newType, newTopBottom, newRow, newColumn, newMinor):
+		# check if FRAD is valid
+		if((len(self.fradStructure) > newType) and (len(self.fradStructure[newType]) > newTopBottom) and 
+			(len(self.fradStructure[newType][newTopBottom]) > newRow) and (len(self.fradStructure[newType][newTopBottom][newRow]) > newColumn) and
+			(len(self.fradStructure[newType][newTopBottom][newRow][newColumn]) > newMinor)):
+			self.type = newType
+			self.topBottom = newTopBottom
+			self.row = newRow
+			self.column = newColumn
+			self.minor = newMinor
+			return self.FRAD_OK
+		else:
+			return self.FRAD_OUT_OF_BOUNDS
+
+	def set_current_frad(self, frad):
+		# check if frad is out of bounds
+		if(frad & (~(self.typeMask | self.topBottomMask | self.rowMask | self.columnMask | self.minorMask))):
+			return self.FRAD_OUT_OF_BOUNDS
+		curType = (frad & self.typeMask) >> self.typeShift
+		curTopBottom = 0 if (self.series == 8) else (frad & self.topBottomMask) >> self.topBottomShift
+		curRow = (frad & self.rowMask) >> self.rowShift
+		curColumn = (frad & self.columnMask) >> self.columnShift
+		curMinor = frad & self.minorMask
+		return self.set_current_location(curType, curTopBottom, curRow, curColumn, curMinor)
 
 if __name__ == '__main__':
 	frads = FradStructure(7)
 	frads.load_frads('./frads/xc7k325t_frads.txt')
 	print "length of frads.fradStructure: " + str(len(frads.fradStructure))
+	frads.set_current_frad(0x400b85)
 	for i in frads.fradArray:
-		print hex(frads.step_forward())
+		print hex(frads.step_backward())
