@@ -42,6 +42,7 @@ class FradStructure:
 		self.DUMMY_FRAME = 0xFF000000
 
 		self.series = series
+		self.numFrads = 0
 		self.fradStructure = []
 		self.fradArray = []
 		self.type = 0
@@ -126,12 +127,23 @@ class FradStructure:
 				self.fradStructure[curType][curTopBottom][curRow].append([])
 				prevColumn = curColumn
 			self.fradStructure[curType][curTopBottom][curRow][curColumn].append([]) # append another array to hold words
+			self.numFrads += 1
 
 	def append_word(self, word):
 		"""
 		This function appends the specified word to the current frame
+		:param word: 32 bit word to be added
+		:return: returns nothing
 		"""
 		self.fradStructure[self.type][self.topBottom][self.row][self.column][self.minor].append(word)
+
+	def get_num_frads(self):
+		"""
+		This function returns the number of frame addresses in the device
+		:return: The number of frame addresses in the device
+		"""
+		return self.numFrads
+		
 
 	def get_current_frad(self):
 		"""
