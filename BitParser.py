@@ -62,22 +62,34 @@ class BitParser:
 			else:
 				currentState = header_st
 
-		print("Sync word found!\n")
-
 		# Find type 2 write packet (start of actual configuration frame data)
 		while 1:
-			word = f.read(4)
-			if (unpack('I', word) & self.type2WriteMask) == self.type2WriteMask:
+			bytes = f.read(4)
+			word = (ord(bytes[0]) << 24) | (ord(bytes[1]) << 16) | (ord(bytes[2]) << 8) | ord(bytes[3])
+			if (word & self.type2WriteMask) == self.type2WriteMask:
 				break
-
-		print("Found type 2 write packet!\n")
 		
+		# Parse each 32 bit word and store it in appropriate word/frame location
+		numFrames = fradStructure.get_num_frads()
+		frameCount = 0
+		fradStructure.set_current_frad(0)
+		while frameCount < numFrames:
+			wordCount = 0
+			while wordCount < self.wordsPerFrame:
+				bytes = f.read(4)
+				word = (ord(bytes[0]) << 24) | (ord(bytes[1]) << 16) | (ord(bytes[2]) << 8) | ord(bytes[3])
+				fradStructure.append_word(word)
+				wordCount += 1
+			frameCount += 1
+			fradStructure.step_forward()
 
 
 if __name__ == '__main__':
-	frads = FradStructure(8)
-	frads.load_frads('./frads/xcku040_frads.txt')
-	parser = BitParser(8)
-	parser.parse_file('../ECEn493r/bitfiles/ff_rb_100_1024_600.bit', frads)
+	frads = FradStructure(5)
+	frads.load_frads('./frads/xc5vlx110t_frads.txt')
+	parser = BitParser(5)
+	parser.parse_file('../ECEn493r/bitfiles/ml509_microblaze.bit', frads)
+	frads.set_current_frad(0)
+	frads.print_current_frame()
 
 	

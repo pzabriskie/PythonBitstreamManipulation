@@ -466,6 +466,14 @@ class FradStructure:
 		else:
 			return self.FRAD_OUT_OF_BOUNDS
 
+	def print_current_frame(self):
+		wordCount = 0
+		print "Frame: " + hex(self.get_current_frad())
+		print "Words:"
+		for word in self.fradStructure[self.type][self.topBottom][self.row][self.column][self.minor]:
+			print str(wordCount) + ": " + hex(word)
+			wordCount += 1
+
 if __name__ == '__main__':
 	frads = FradStructure(8)
 	frads.load_frads('./frads/xcku040_frads.txt')
