@@ -1,32 +1,16 @@
 from FradStructure import FradStructure
-from struct import *
 
 class BitParser:
 	"""
 	This class parses normal bitstream files (.bit) and loads a FradStructure with the values
 	"""
-	def __init__(self, series):
+	def __init__(self):
 		"""
 		Construct a new BitParser object
-
-		:param series: Series of device related to bitstream
 		:return: returns nothing
 		"""
-
-		self.series = series
 		# A type 2 packet specifying a write marks the beginning of the frame data
 		self.type2WriteMask = 0x50000000
-
-		if(series == 5):
-			self.wordsPerFrame = 41
-		elif(series == 6):
-			self.wordsPerFrame = 81
-		elif(series == 7):
-			self.wordsPerFrame = 101
-		elif(series == 8):
-			self.wordsPerFrame = 123
-		elif(series == 9):
-			self.wordsPerFrame = 93
 
 	def parse_file(self, bitFile, fradStructure):
 		"""
@@ -75,7 +59,7 @@ class BitParser:
 		fradStructure.set_current_frad(0)
 		while frameCount < numFrames:
 			wordCount = 0
-			while wordCount < self.wordsPerFrame:
+			while wordCount < fradStructure.wordsPerFrame:
 				bytes = f.read(4)
 				word = (ord(bytes[0]) << 24) | (ord(bytes[1]) << 16) | (ord(bytes[2]) << 8) | ord(bytes[3])
 				fradStructure.append_word(word)
@@ -87,7 +71,7 @@ class BitParser:
 if __name__ == '__main__':
 	frads = FradStructure(5)
 	frads.load_frads('./frads/xc5vlx110t_frads.txt')
-	parser = BitParser(5)
+	parser = BitParser()
 	parser.parse_file('../ECEn493r/bitfiles/ml509_microblaze.bit', frads)
 	frads.set_current_frad(0)
 	frads.print_current_frame()

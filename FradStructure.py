@@ -8,7 +8,7 @@ class FradStructure:
 
 	def __init__(self, series):
 		"""
-		Construct a new FradStructure object
+		Construct a new FradStructure object. Frad = Frame Address
 		:param series: The series of the device
 		:return: returns nothing
 		"""
@@ -43,6 +43,8 @@ class FradStructure:
 
 		self.series = series
 		self.numFrads = 0
+		self.numLogicFrames = 0
+		self.numBramFrames = 0
 		self.fradStructure = []
 		self.fradArray = []
 		self.type = 0
@@ -78,6 +80,17 @@ class FradStructure:
 
 		self.minorMask = self.MINOR_MASK
 		self.columnShift = self.COLUMN_SHIFT
+
+		if(series == 5):
+			self.wordsPerFrame = 41
+		elif(series == 6):
+			self.wordsPerFrame = 81
+		elif(series == 7):
+			self.wordsPerFrame = 101
+		elif(series == 8):
+			self.wordsPerFrame = 123
+		elif(series == 9):
+			self.wordsPerFrame = 93
 
 	def load_frads(self, fradFile):
 		"""
@@ -128,6 +141,10 @@ class FradStructure:
 				prevColumn = curColumn
 			self.fradStructure[curType][curTopBottom][curRow][curColumn].append([]) # append another array to hold words
 			self.numFrads += 1
+			if curType == 0:
+				self.numLogicFrames += 1
+			if curType == 1:
+				self.numBramFrames += 1
 
 	def append_word(self, word):
 		"""
@@ -136,6 +153,9 @@ class FradStructure:
 		:return: returns nothing
 		"""
 		self.fradStructure[self.type][self.topBottom][self.row][self.column][self.minor].append(word)
+
+	def get_current_frame_data(self):
+		return self.fradStructure[self.type][self.topBottom][self.row][self.column][self.minor]
 
 	def get_num_frads(self):
 		"""

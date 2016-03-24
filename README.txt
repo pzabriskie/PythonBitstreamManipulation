@@ -7,6 +7,7 @@ Planned features:
 		ASCII raw bitstreams
 		Mask files
 		Essential Bitfiles
+			Note: ASCII format and only configuration frames, no BRAM
 		Readback files
 		.ll files
 
