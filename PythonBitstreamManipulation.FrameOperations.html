@@ -1,0 +1,41 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: class FrameOperations</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><strong>PythonBitstreamManipulation.FrameOperations</strong> = <a name="PythonBitstreamManipulation.FrameOperations">class FrameOperations</a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;stores&nbsp;two&nbsp;FradStructure&nbsp;classes&nbsp;and&nbsp;performs&nbsp;various&nbsp;operations&nbsp;to&nbsp;compare&nbsp;them<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="FrameOperations-__init__"><strong>__init__</strong></a>(self, fradStructure1, fradStructure2)</dt></dl>
+
+<dl><dt><a name="FrameOperations-compare_frame"><strong>compare_frame</strong></a>(self, frame1, frame2)</dt><dd><tt>Helper&nbsp;function&nbsp;to&nbsp;compare&nbsp;frames&nbsp;for&nbsp;use&nbsp;in&nbsp;diff&nbsp;functions<br>
+&nbsp;<br>
+:param&nbsp;frame1:&nbsp;Array&nbsp;of&nbsp;words&nbsp;in&nbsp;frame1<br>
+:param&nbsp;frame2:&nbsp;Array&nbsp;of&nbsp;words&nbsp;in&nbsp;frame2<br>
+:return:&nbsp;Array&nbsp;of&nbsp;(word,&nbsp;bit)&nbsp;tuples&nbsp;where&nbsp;differences&nbsp;are&nbsp;found</tt></dd></dl>
+
+<dl><dt><a name="FrameOperations-diff"><strong>diff</strong></a>(self, includeBram)</dt><dd><tt>Report&nbsp;all&nbsp;word&nbsp;differences&nbsp;between&nbsp;two&nbsp;FradStructure&nbsp;objects<br>
+:return:&nbsp;Array&nbsp;containing&nbsp;(frad,&nbsp;word,&nbsp;bit)&nbsp;upset&nbsp;tuples</tt></dd></dl>
+
+<dl><dt><a name="FrameOperations-diff_ignore_masked"><strong>diff_ignore_masked</strong></a>(self, includeBram, mskFradStructure)</dt><dd><tt>This&nbsp;function&nbsp;finds&nbsp;upsets&nbsp;between&nbsp;two&nbsp;fradStructures&nbsp;and&nbsp;ignores&nbsp;upsets&nbsp;in&nbsp;masked&nbsp;bits.<br>
+:param&nbsp;mskFradStructure:&nbsp;FradStructure&nbsp;object&nbsp;containing&nbsp;mask&nbsp;information</tt></dd></dl>
+
+<dl><dt><a name="FrameOperations-find_essential_upsets"><strong>find_essential_upsets</strong></a>(self, ebdFradStructure)</dt><dd><tt>This&nbsp;function&nbsp;finds&nbsp;upsets&nbsp;between&nbsp;two&nbsp;fradStructures&nbsp;and&nbsp;then&nbsp;checks&nbsp;to&nbsp;see<br>
+if&nbsp;upset&nbsp;occurred&nbsp;at&nbsp;an&nbsp;essential&nbsp;bit&nbsp;location<br>
+:param&nbsp;ebdFradStructure:&nbsp;FradStructure&nbsp;object&nbsp;containing&nbsp;essential&nbsp;bit&nbsp;information<br>
+:return:&nbsp;Array&nbsp;containing&nbsp;(frad,&nbsp;word,&nbsp;bit)&nbsp;upset&nbsp;tuples</tt></dd></dl>
+
+<dl><dt><a name="FrameOperations-set_frad_structures"><strong>set_frad_structures</strong></a>(self, fradStructure1, fradStructure2)</dt><dd><tt>Set&nbsp;the&nbsp;frad&nbsp;structures&nbsp;to&nbsp;be&nbsp;compared&nbsp;in&nbsp;subsequent&nbsp;operations.<br>
+:param&nbsp;fradStructure1:&nbsp;First&nbsp;frad&nbsp;structure&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;operations.<br>
+:param&nbsp;fradStructure2:&nbsp;Second&nbsp;frad&nbsp;structure&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;operations.<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+</td></tr></table>
+</body></html>

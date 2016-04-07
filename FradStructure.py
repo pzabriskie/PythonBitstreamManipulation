@@ -2,7 +2,7 @@ __author__ = 'Peter Zabriskie'
 
 class FradStructure:
 	"""
-	This class is a special data structure that fascillitates navigation
+	This class is a special data structure that fascilitates navigation
 	of the frame addresses in the device
 	"""
 

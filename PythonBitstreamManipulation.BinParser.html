@@ -1,0 +1,57 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: class BinParser</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><strong>PythonBitstreamManipulation.BinParser</strong> = <a name="PythonBitstreamManipulation.BinParser">class BinParser</a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;parses&nbsp;binary&nbsp;formatted&nbsp;files&nbsp;including:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Normal&nbsp;bitstream&nbsp;files&nbsp;(.bit)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.bin&nbsp;files<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Readback&nbsp;files&nbsp;(.rbb)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mask&nbsp;files&nbsp;(.msk)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JCM&nbsp;readback&nbsp;files&nbsp;(.data)<br>
+It&nbsp;loads&nbsp;a&nbsp;FradStructure&nbsp;with&nbsp;the&nbsp;values&nbsp;obtained&nbsp;from&nbsp;the&nbsp;specified&nbsp;file<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BinParser-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;BinParser&nbsp;object<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+<dl><dt><a name="BinParser-extract_frame_data"><strong>extract_frame_data</strong></a>(self, fd, fradStructure, includeBram, padFrame, dummyFrames, swapEndian)</dt><dd><tt>This&nbsp;function&nbsp;extracts&nbsp;frame&nbsp;data&nbsp;from&nbsp;a&nbsp;file&nbsp;once&nbsp;the&nbsp;location&nbsp;of&nbsp;configuration&nbsp;data&nbsp;has&nbsp;been&nbsp;found.<br>
+:param&nbsp;fd:&nbsp;File&nbsp;descriptor&nbsp;that&nbsp;is&nbsp;pointing&nbsp;to&nbsp;the&nbsp;start&nbsp;of&nbsp;the&nbsp;configuration&nbsp;data<br>
+:param&nbsp;fradStructure:&nbsp;FradStructure&nbsp;object&nbsp;to&nbsp;be&nbsp;loaded&nbsp;by&nbsp;parsing<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+<dl><dt><a name="BinParser-parse_bin_file"><strong>parse_bin_file</strong></a>(self, binFile, fradStructure)</dt><dd><tt>Parsing&nbsp;an&nbsp;bin&nbsp;file&nbsp;is&nbsp;actually&nbsp;exactly&nbsp;the&nbsp;same&nbsp;as&nbsp;parsing&nbsp;a&nbsp;bit&nbsp;file.&nbsp;This&nbsp;is&nbsp;just&nbsp;a&nbsp;wrapper.<br>
+:param&nbsp;binFile:&nbsp;Path&nbsp;to&nbsp;bin&nbsp;file&nbsp;to&nbsp;be&nbsp;parsed<br>
+:param&nbsp;fradStructure:&nbsp;FradStructure&nbsp;object&nbsp;to&nbsp;be&nbsp;loaded<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+<dl><dt><a name="BinParser-parse_bit_file"><strong>parse_bit_file</strong></a>(self, bitFile, fradStructure)</dt><dd><tt>This&nbsp;function&nbsp;parses&nbsp;the&nbsp;given&nbsp;bitfile&nbsp;and&nbsp;loads&nbsp;the&nbsp;provided&nbsp;fradStructure&nbsp;with&nbsp;the&nbsp;values<br>
+:param&nbsp;bitFile:&nbsp;Path&nbsp;to&nbsp;bitfile&nbsp;to&nbsp;be&nbsp;parsed<br>
+:param&nbsp;fradStructure:&nbsp;FradStructure&nbsp;object&nbsp;which&nbsp;will&nbsp;store&nbsp;frame&nbsp;data<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+<dl><dt><a name="BinParser-parse_data_file"><strong>parse_data_file</strong></a>(self, dataFile, fradStructure)</dt><dd><tt>This&nbsp;function&nbsp;parses&nbsp;the&nbsp;given&nbsp;.data&nbsp;file&nbsp;(JCM&nbsp;readback)&nbsp;and&nbsp;loads&nbsp;the&nbsp;provided&nbsp;fradStructure&nbsp;with&nbsp;the&nbsp;values.<br>
+Note:&nbsp;JCM&nbsp;readback&nbsp;is&nbsp;Big&nbsp;Endian,&nbsp;but&nbsp;other&nbsp;Xilinx&nbsp;files&nbsp;are&nbsp;Little&nbsp;Endian&nbsp;format.<br>
+:param&nbsp;dataFile:&nbsp;Path&nbsp;to&nbsp;readback&nbsp;file&nbsp;to&nbsp;be&nbsp;parsed<br>
+:param&nbsp;fradStructure:&nbsp;FradStructure&nbsp;object&nbsp;which&nbsp;will&nbsp;store&nbsp;frame&nbsp;data<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+<dl><dt><a name="BinParser-parse_msk_file"><strong>parse_msk_file</strong></a>(self, mskFile, fradStructure)</dt><dd><tt>Parsing&nbsp;an&nbsp;msk&nbsp;file&nbsp;is&nbsp;actually&nbsp;exactly&nbsp;the&nbsp;same&nbsp;as&nbsp;parsing&nbsp;a&nbsp;bit&nbsp;file.&nbsp;This&nbsp;is&nbsp;just&nbsp;a&nbsp;wrapper.<br>
+:param&nbsp;mskFile:&nbsp;Path&nbsp;to&nbsp;msk&nbsp;file&nbsp;to&nbsp;be&nbsp;parsed<br>
+:param&nbsp;fradStructure:&nbsp;FradStructure&nbsp;object&nbsp;to&nbsp;be&nbsp;loaded<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+<dl><dt><a name="BinParser-parse_rbb_file"><strong>parse_rbb_file</strong></a>(self, rbbFile, fradStructure)</dt><dd><tt>This&nbsp;function&nbsp;parses&nbsp;the&nbsp;given&nbsp;.rbb&nbsp;readback&nbsp;file&nbsp;and&nbsp;loads&nbsp;the&nbsp;provided&nbsp;fradStructure&nbsp;with&nbsp;the&nbsp;values.<br>
+:param&nbsp;rbbFile:&nbsp;Path&nbsp;to&nbsp;rbbfile&nbsp;to&nbsp;be&nbsp;parsed<br>
+:param&nbsp;fradStructure:&nbsp;FradStructure&nbsp;object&nbsp;which&nbsp;will&nbsp;store&nbsp;frame&nbsp;data<br>
+:return:&nbsp;returns&nbsp;nothing</tt></dd></dl>
+
+</td></tr></table>
+</body></html>

@@ -1,5 +1,5 @@
+__author__ = 'Peter Zabriskie'
 from FradStructure import FradStructure
-import numpy
 
 class AsciiParser:
 	"""

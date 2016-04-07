@@ -1,3 +1,4 @@
+__author__ = 'Peter Zabriskie'
 from FradStructure import FradStructure
 
 class BinParser:
@@ -20,11 +21,23 @@ class BinParser:
 		self.type2ReadMask = 0x48000000
 
 	def parse_data_file(self, dataFile, fradStructure):
+		"""
+		This function parses the given .data file (JCM readback) and loads the provided fradStructure with the values.
+		Note: JCM readback is Big Endian, but other Xilinx files are Little Endian format.
+		:param dataFile: Path to readback file to be parsed
+		:param fradStructure: FradStructure object which will store frame data
+		:return: returns nothing
+		"""
 		f = open(dataFile, "rb")
 		self.extract_frame_data(f, fradStructure, 0, 0, 1, 1)
 
 	def parse_rbb_file(self, rbbFile, fradStructure):
-
+		"""
+		This function parses the given .rbb readback file and loads the provided fradStructure with the values.
+		:param rbbFile: Path to rbbfile to be parsed
+		:param fradStructure: FradStructure object which will store frame data
+		:return: returns nothing
+		"""
 
 		header_st = 0
 		firstByte_st = 1

@@ -1,3 +1,4 @@
+__author__ = 'Peter Zabriskie'
 from FradStructure import FradStructure
 
 class FrameOperations:
