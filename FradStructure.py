@@ -15,6 +15,7 @@ class FradStructure:
 
 		# Constant definitions
 		self.FRAD_OUT_OF_BOUNDS = -1
+		self.WORD_OUT_OF_BOUNDS = -2
 		self.FRAD_OK = 0
 		self.MAX_LINE_SIZE = 256
 		self.ADDRESS_SIZE = 8
@@ -45,6 +46,9 @@ class FradStructure:
 		self.numFrads = 0
 		self.numLogicFrames = 0
 		self.numBramFrames = 0
+		self.numType2Frames = 0
+		self.numType3Frames = 0
+		self.numType4Frames = 0
 		self.fradStructure = []
 		self.fradArray = []
 		self.type = 0
@@ -99,14 +103,17 @@ class FradStructure:
 		:param fradFile: Path to file containing list of frame addresses
 		:return: returns nothing
 		"""
-		frads = open(fradFile, 'r')
+		frads = open(fradFile, 'r').read().split("\n")
 		prevType = -1
 		prevTopBottom = -1
 		prevRow = -1
 		prevColumn = -1
 
 		for line in frads:
-			fradString = '0x' + line[self.ADDRESS_START:self.ADDRESS_START+self.ADDRESS_SIZE]
+			if (len(line) == 0):
+				continue
+
+			fradString = line[self.ADDRESS_START:self.ADDRESS_START+self.ADDRESS_SIZE]
 			fradVal = int(fradString, 16)
 			self.fradArray.append(fradVal)
 
@@ -145,6 +152,12 @@ class FradStructure:
 				self.numLogicFrames += 1
 			if curType == 1:
 				self.numBramFrames += 1
+			if curType == 2:
+				self.numType2Frames += 1
+			if curType == 3:
+				self.numType3Frames += 1
+			if curType == 4:
+				self.numType4Frames += 1
 
 	def append_word(self, word):
 		"""
@@ -154,7 +167,63 @@ class FradStructure:
 		"""
 		self.fradStructure[self.type][self.topBottom][self.row][self.column][self.minor].append(word)
 
+	def get_word_from_current_frad(self, wordNum):
+		"""
+		This function returns the specified word from the current frame.
+		:param wordNum: Index of desired word
+		:return: Returns value of word at specified location
+		"""
+
+		if wordNum >= self.wordsPerFrame:
+			print "wordNum out of bounds in FradStructure:get_word_in_current_frame()"
+		else:
+			return self.fradStructure[self.type][self.topBottom][self.row][self.column][self.minor][wordNum]
+
+	def get_word_from_frad(self, frad, wordNum):
+		"""
+		This function returns the specified word from the specified frame.
+		:param frad: Frame address where desired word is located
+		:param wordNum: Index of desired word
+		:return: Returns value of word at specified location
+		"""
+
+		newType = (frad & self.typeMask) >> self.typeShift
+		newTopBottom = 0 if (self.series == 8) else (frad & self.topBottomMask) >> self.topBottomShift
+		newRow = (frad & self.rowMask) >> self.rowShift
+		newColumn = (frad & self.columnMask) >> self.columnShift
+		newMinor = frad & self.minorMask
+		if(self.check_location(newType, newTopBottom, newRow, newColumn, newMinor) == self.FRAD_OUT_OF_BOUNDS):
+			print "FRAD out of bounds in FradStructure:get_word_from_frad()"
+			return self.FRAD_OUT_OF_BOUNDS
+		if wordNum >= self.wordsPerFrame:
+			print "wordNum out of bounds in FradStructure:get_word_in_current_frame()"
+			return self.WORD_OUT_OF_BOUNDS
+		else:
+			return self.fradStructure[newType][newTopBottom][newRow][newColumn][newMinor][wordNum]
+
+	def get_frame_data(self, frad):
+		"""
+		This function returns an array of all the words at the specified frame address.
+		:param frad: Frame address where desired data is located
+		:return: An array of all the words at the specified address
+		"""
+
+		newType = (frad & self.typeMask) >> self.typeShift
+		newTopBottom = 0 if (self.series == 8) else (frad & self.topBottomMask) >> self.topBottomShift
+		newRow = (frad & self.rowMask) >> self.rowShift
+		newColumn = (frad & self.columnMask) >> self.columnShift
+		newMinor = frad & self.minorMask
+		if(self.check_location(newType, newTopBottom, newRow, newColumn, newMinor) == self.FRAD_OUT_OF_BOUNDS):
+			print "FRAD out of bounds in FradStructure:get_frame_data()"
+			return self.FRAD_OUT_OF_BOUNDS
+
+		return self.fradStructure[newType][newTopBottom][newRow][newColumn][newMinor]
+
 	def get_current_frame_data(self):
+		"""
+		This function returns an array of all the words at the current frame address.
+		:return: An array of all the words at the specified address
+		"""
 		return self.fradStructure[self.type][self.topBottom][self.row][self.column][self.minor]
 
 	def get_num_frads(self):
@@ -205,6 +274,23 @@ class FradStructure:
 		"""
 		return self.minor
 
+	def check_location(self, newType, newTopBottom, newRow, newColumn, newMinor):
+		"""
+		Helper function to check if location data points to a valid frame.
+		:param newType: Type of frame address at desired location
+		:param newTopBottom: Top/Bottom value of frame address at desired location
+		:param newRow: Row of frame address at desired location
+		:param newColumn: Column of frame address at desired location
+		:param newMinor: Minor of frame address at desired location
+		:return: FRAD_OK (0) if location is valid, FRAD_OUT_OF_BOUNDS (-1) if not		
+		"""
+		if((len(self.fradStructure) > newType) and (len(self.fradStructure[newType]) > newTopBottom) and 
+			(len(self.fradStructure[newType][newTopBottom]) > newRow) and (len(self.fradStructure[newType][newTopBottom][newRow]) > newColumn) and
+			(len(self.fradStructure[newType][newTopBottom][newRow][newColumn]) > newMinor)):
+			return self.FRAD_OK
+		else:
+			return self.FRAD_OUT_OF_BOUNDS
+
 	def set_current_location(self, newType, newTopBottom, newRow, newColumn, newMinor):
 		"""
 		Sets frame address that FradStructure points to using type, top/bottom, row, column, and minor values
@@ -216,9 +302,7 @@ class FradStructure:
 		:return: FRAD_OK (0) if location is valid, FRAD_OUT_OF_BOUNDS (-1) if not
 		"""
 		# check if FRAD is valid
-		if((len(self.fradStructure) > newType) and (len(self.fradStructure[newType]) > newTopBottom) and 
-			(len(self.fradStructure[newType][newTopBottom]) > newRow) and (len(self.fradStructure[newType][newTopBottom][newRow]) > newColumn) and
-			(len(self.fradStructure[newType][newTopBottom][newRow][newColumn]) > newMinor)):
+		if(self.check_location(newType, newTopBottom, newRow, newColumn, newMinor) == self.FRAD_OK):
 			self.type = newType
 			self.topBottom = newTopBottom
 			self.row = newRow
@@ -487,6 +571,11 @@ class FradStructure:
 			return self.FRAD_OUT_OF_BOUNDS
 
 	def print_current_frame(self):
+		"""
+		Helper function which prints out the current frame address followed by all the words in the frame.
+		:return: returns nothing
+		"""
+		
 		wordCount = 0
 		print "Frame: " + hex(self.get_current_frad())
 		print "Words:"
@@ -495,6 +584,9 @@ class FradStructure:
 			wordCount += 1
 
 if __name__ == '__main__':
-	frads = FradStructure(8)
-	frads.load_frads('./frads/xcku040_frads.txt')
-	frads.move_row_up()
+	frads = FradStructure(7)
+	frads.load_frads('./frads/xc7k325t_frads.txt')
+	frads.set_current_frad(0)
+	for i in range(frads.numFrads):
+		print str(hex(frads.get_current_frad()))
+		frads.step_forward()

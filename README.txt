@@ -3,13 +3,12 @@ This library will provide tools to parse and extract information from bitstreams
 Planned features:
 	Parse following files:
 		Regular .bit bitstreams
-		Raw bitstreams (no header)
-		ASCII raw bitstreams
-		Mask files
-		Essential Bitfiles
-			Note: ASCII format and only configuration frames, no BRAM
-		Readback files
-		.ll files
+		Raw bitstreams (.bin)
+		ASCII raw bitstreams (.rbt)
+		Mask files (.msk, .msd)
+		Essential Bitfiles (.ebd) (Proprietary. Fuctionality not yet verified. Use at own risk)
+		Readback files (.rbb, .rba, .rbd, JCM .data files)
+		.ll files (TODO)
 
 	Ability to query bitstreams on a frame, word, or bit level
 
@@ -24,5 +23,5 @@ Planned features:
 
 Class Structure:
 	Parser classes will return a fradStructure object after parsing the file given to it.
-	fradStructure contains methods for accessing frame data as well as FAR incrementing logic.
-	frameOperations performs useful operations to compare data from two fradStructure objects.
+	FradStructure contains methods for accessing frame data as well as FAR incrementing logic.
+	FrameOperations performs useful operations to compare data from two FradStructure objects.
