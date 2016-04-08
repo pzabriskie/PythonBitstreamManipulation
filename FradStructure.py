@@ -587,6 +587,12 @@ if __name__ == '__main__':
 	frads = FradStructure(7)
 	frads.load_frads('./frads/xc7k325t_frads.txt')
 	frads.set_current_frad(0)
-	for i in range(frads.numFrads):
-		print str(hex(frads.get_current_frad()))
-		frads.step_forward()
+	print "Logic: " + str(frads.numLogicFrames)
+	print "BRAM: " + str(frads.numBramFrames)
+	print "Type 2: " + str(frads.numType2Frames)
+	print "Type 3: " + str(frads.numType3Frames)
+	print "Type 4: " + str(frads.numType4Frames)
+	print "Total: " + str(frads.numFrads)
+	# for i in range(frads.numFrads):
+	# 	print str(hex(frads.get_current_frad()))
+	# 	frads.step_forward()
